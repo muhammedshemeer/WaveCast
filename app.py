@@ -2,145 +2,227 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 
 # ==========================================
-# 🌐 1. PAGE CONFIGURATION & TITLE
+# 🌐 1. PAGE CONFIGURATION & STYLING
 # ==========================================
 st.set_page_config(
-    page_title="WaveCast | Minimal Ocean Dashboard",
+    page_title="WaveCast | Premium Ocean Dashboard",
     page_icon="🌊",
     layout="wide"
 )
 
-# Header Section
-st.title("🌊 WaveCast: Significant Ocean Swell Dashboard")
-st.markdown("A lightweight, beginner-friendly ocean swell visualization and forecasting tool.")
-st.markdown("---")
+# Custom Deep-Ocean Dark Glassmorphism Styling
+st.markdown("""
+    <style>
+        .stApp {
+            background: linear-gradient(135deg, #050b14 0%, #0a1628 100%);
+            color: #f1f5f9;
+        }
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: -webkit-linear-gradient(45deg, #00d4ff, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.2rem;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            margin-bottom: 1.5rem;
+        }
+        .glow-cyan { border-left: 4px solid #00d4ff; }
+        .glow-teal { border-left: 4px solid #14b8a6; }
+        .glow-amber { border-left: 4px solid #f59e0b; }
+    </style>
+""", unsafe_allow_html=True)
+
+# Main Title Headers
+st.markdown('<h1 class="main-title">🌊 WaveCast Significant Ocean Forecast</h1>', unsafe_allow_html=True)
+st.markdown("<p style='color: #94a3b8; font-style: italic; margin-bottom: 2rem;'>Interactive Deep-Ocean Visualizations & Physics-Based Wave Swell Projections</p>", unsafe_allow_html=True)
 
 # ==========================================
-# 🎛️ 2. SIDEBAR CONTROLS
+# 🎛️ 2. UPGRADED SIDEBAR CONTROLLER PANEL
 # ==========================================
-st.sidebar.header("🕹️ Simulation Panel")
-st.sidebar.markdown("Adjust the sliders below to simulate changing meteorological parameters:")
+st.sidebar.markdown("### 🎛️ Control Center")
+st.sidebar.markdown("Adjust meteorological inputs to recalculate wave forecasts in real-time.")
 
-# Slide control for Wind Speed
-sim_wind = st.sidebar.slider(
-    label="Wind Speed (m/s)",
-    min_value=0.5,
-    max_value=25.0,
-    value=8.5,
-    step=0.5,
-    help="Higher wind speeds generate larger significant wave heights."
-)
+sim_wind = st.sidebar.slider("Wind Speed (m/s)", 0.5, 25.0, 8.5, step=0.5, help="Wind speed directly influences significant swells.")
+sim_press = st.sidebar.slider("Air Pressure (hPa)", 960, 1040, 1013, step=1, help="Low barometric pressures indicate storms.")
+sim_temp = st.sidebar.slider("Sea Temp (°C)", 4.0, 32.0, 14.5, step=0.5, help="Ocean water temperature.")
 
-# Slide control for Air Pressure
-sim_press = st.sidebar.slider(
-    label="Barometric Pressure (hPa)",
-    min_value=960,
-    max_value=1040,
-    value=1013,
-    step=1,
-    help="Low pressure drops indicate incoming ocean storms."
-)
+st.sidebar.markdown("---")
+st.sidebar.markdown("🧑‍💻 **Author: Mohammed Shemeer**")
 
 # ==========================================
-# 💾 3. SAMPLE DATASET GENERATION
+# 💾 3. SEEDING BUOY HISTORICAL SENSOR DATA
 # ==========================================
 @st.cache_data
-def generate_sample_data():
-    """Generates 24 hours of synthetic buoy ocean logs using NumPy and Pandas."""
+def generate_buoy_dataset():
+    """Generates 48 hours of detailed synthetic buoy logs for graphing."""
     np.random.seed(42)
-    hours = list(range(1, 25))
+    hours = np.arange(48)
     
-    # Generate smooth wave trend using sine waves + random wind fluctuations
-    base_waves = np.sin(np.linspace(0, 5, 24)) * 0.5 + 1.5
-    noise = np.random.normal(0, 0.15, 24)
-    wave_heights = np.clip(base_waves + noise, 0.3, 5.0)
+    # Simulate smooth wave swells with fluctuations
+    base_wave = np.sin(hours / 6.0) * 0.6 + 1.8
+    noise_wave = np.random.normal(0, 0.12, 48)
+    wave_heights = np.clip(base_wave + noise_wave, 0.4, 6.0)
     
-    # Pack into a Pandas DataFrame
+    # Simulate model predictions (representing historical predictions from ML)
+    predicted_heights = wave_heights + np.random.normal(0, 0.08, 48)
+    predicted_heights = np.clip(predicted_heights, 0.4, 6.0)
+    
+    # Wind correlation
+    wind_speeds = base_wave * 4.0 + np.random.normal(0, 1.2, 48)
+    wind_speeds = np.clip(wind_speeds, 1.5, 24.0)
+    
     df = pd.DataFrame({
-        "Hour Offset": [f"-{24 - h}h" for h in hours],
-        "Wave Height (m)": wave_heights,
-        "Wind Speed (m/s)": np.linspace(6.0, 11.0, 24) + np.random.normal(0, 0.5, 24)
+        "Hour Offset": [f"-{48 - h}h" for h in hours],
+        "HourIndex": hours,
+        "Actual Wave (m)": wave_heights,
+        "Predicted Wave (m)": predicted_heights,
+        "Wind Speed (m/s)": wind_speeds
     })
     return df
 
-# Load the historical dataset
-buoy_data = generate_sample_data()
+buoy_data = generate_buoy_dataset()
 
 # ==========================================
-# 🔮 4. INTERACTIVE PHYSICS-BASED INFERENCE
+# 🔮 4. INTERACTIVE SWELL INFERENCE
 # ==========================================
-# Predict swell size dynamically: Swell size correlates with wind shear and pressure drop
-predicted_height = 0.5 + (0.12 * sim_wind) + (0.015 * (1020 - sim_press))
-predicted_height = max(0.2, min(7.5, predicted_height)) # Bound values safely
+# Swell size is computed using simulated weather wind speeds & pressure drop factors
+predicted_swell = 0.5 + (0.12 * sim_wind) + (0.015 * (1020 - sim_press)) + (0.01 * (sim_temp - 12))
+predicted_swell = max(0.2, min(7.5, predicted_swell))
 
 # ==========================================
-# 📊 5. KPI METRICS & DISPLAY CARDS
+# 📊 5. RE-DESIGNED GLOWING KPI METRIC LAYOUT
 # ==========================================
-# Create two professional-looking metrics cards side-by-side
-kpi_col1, kpi_col2 = st.columns(2)
+kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
 
 with kpi_col1:
-    st.metric(
-        label="🎯 Predicted Wave Height",
-        value=f"{predicted_height:.2f} meters",
-        delta=f"{(predicted_height - 1.5):+.2f} m vs. Base Swell"
-    )
+    st.markdown('<div class="glass-card glow-cyan">', unsafe_allow_html=True)
+    st.metric("🎯 Predicted Swell Height", f"{predicted_swell:.2f} meters", 
+              delta=f"{(predicted_swell - 1.8):+.2f} m vs. Base Swell")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with kpi_col2:
-    st.metric(
-        label="💨 Simulated Wind Speed",
-        value=f"{sim_wind:.1f} m/s",
-        delta="High Swell Alert" if sim_wind > 12.0 else "Calm Seas"
-    )
+    st.markdown('<div class="glass-card glow-teal">', unsafe_allow_html=True)
+    st.metric("💨 Simulated Wind Speed", f"{sim_wind:.1f} m/s", 
+              delta="Active Breeze" if sim_wind > 10.0 else "Gentle Wind", delta_color="off")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("---")
+with kpi_col3:
+    st.markdown('<div class="glass-card glow-amber">', unsafe_allow_html=True)
+    st.metric("🌀 Ocean Surface Temperature", f"{sim_temp:.1f} °C", 
+              delta="Moderate Temp" if 10.0 < sim_temp < 20.0 else "Peak Temp", delta_color="off")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 📈 6. PLOTLY GRAPH & DATA VIEW
+# 📈 6. MULTI-CHART LAYOUT GRID
 # ==========================================
-chart_col, data_col = st.columns([2, 1])
+st.markdown("### 📊 Time-Series Analysis & Predictive Forecasts")
 
-with chart_col:
-    st.subheader("🕒 Historical Buoy Swell Trend (Last 24 Hours)")
+# Setup layout columns for wave plots
+chart_left, chart_right = st.columns([1, 1])
+
+with chart_left:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.markdown("#### 🎯 AI model Predictions vs. Actual Target swells (Last 48h)")
     
-    # Render line chart with Plotly Express
-    fig = px.line(
-        buoy_data,
-        x="Hour Offset",
-        y="Wave Height (m)",
+    fig_val = go.Figure()
+    fig_val.add_trace(go.Scatter(x=buoy_data["HourIndex"], y=buoy_data["Actual Wave (m)"], 
+                                  name="NOAA Buoy Target", line=dict(color="#14b8a6", width=2.5)))
+    fig_val.add_trace(go.Scatter(x=buoy_data["HourIndex"], y=buoy_data["Predicted Wave (m)"], 
+                                  name="Model Forecast", line=dict(color="#f59e0b", width=2, dash="dash")))
+    
+    fig_val.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", title="Hours Offset"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", title="Wave Height (m)"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    st.plotly_chart(fig_val, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with chart_right:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.markdown("#### ⚡ Dynamic 6-Hour Forward Wave Forecast Projection")
+    
+    # Calculate a 6-hour autoregressive weather projection
+    forecast_timeline = list(range(7)) # 0 to 6
+    forecast_values = [predicted_swell]
+    last_height = predicted_swell
+    
+    # Simple recursive progression to simulate decay/buildup curves
+    for step in range(1, 7):
+        next_height = last_height * 0.9 + (0.1 * (0.5 + (0.12 * sim_wind)))
+        forecast_values.append(next_height)
+        last_height = next_height
+        
+    fig_forecast = px.line(
+        x=forecast_timeline,
+        y=forecast_values,
         markers=True,
-        title="BUOY STATION 46059 - SIGNIFICANT WAVE HEIGHTS",
         color_discrete_sequence=["#00d4ff"] # Cyan
     )
-    
-    # Visual updates to Plotly theme to blend with dark dashboard
-    fig.update_layout(
+    fig_forecast.update_layout(
         template="plotly_dark",
-        xaxis_title="Time Offset",
-        yaxis_title="Height (meters)",
+        paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)"
+        xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", title="Hours Into Future"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", title="Wave Height (m)")
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig_forecast, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-with data_col:
-    st.subheader("📂 raw buoy sensors log")
-    st.markdown("Expand the widget below to preview raw tabular recordings.")
+# Row 2: Correlation plots and Raw data preview
+col_corr, col_preview = st.columns([1, 1])
+
+with col_corr:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.markdown("#### 🌀 Wind Speed vs. Wave Height Scatter Correlation")
     
-    # Neat expandable raw data frame ledger
-    with st.expander("👁️ Preview Raw Matrix Ledger"):
-        st.dataframe(buoy_data, use_container_width=True, height=270)
+    fig_scatter = px.scatter(
+        buoy_data,
+        x="Wind Speed (m/s)",
+        y="Actual Wave (m)",
+        trendline="ols",
+        color_discrete_sequence=["#14b8a6"]
+    )
+    fig_scatter.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)")
+    )
+    st.plotly_chart(fig_scatter, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col_preview:
+    st.markdown('<div class="glass-card" style="height: 100%;">', unsafe_allow_html=True)
+    st.markdown("#### 📂 Interactive Sensor Buoy Ledger")
+    st.markdown("Preview the raw buoy records stored locally in your workspace.")
+    
+    with st.expander("👁️ Expand Sensor Table (Last 48 Timestamps)"):
+        st.dataframe(buoy_data[["Hour Offset", "Actual Wave (m)", "Wind Speed (m/s)"]], 
+                     use_container_width=True, height=270)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
 # 🌊 7. FOOTER SECTION
 # ==========================================
 st.markdown("---")
-st.markdown(
-    "<div style='text-align: center; color: #64748b; font-size: 0.85rem;'>"
-    "🌊 <strong>WaveCast Significant Swell Dashboard</strong> | Phase 1 Minimal MVP<br>"
-    "Open Source MIT License | Developed with Streamlit and Plotly"
-    "</div>",
-    unsafe_allow_html=True
-)
+st.markdown("""
+    <div style="text-align: center; color: #64748b; font-size: 0.85rem; padding-bottom: 2rem;">
+        🌊 <strong>WaveCast Significant Swell Forecast Dashboard</strong> | Phase 1 Premium MVP<br>
+        Open Source under the <a href="#" style="color: #00d4ff; text-decoration: none;">MIT License</a> | Created by Mohammed Shemeer
+    </div>
+""", unsafe_allow_html=True)
