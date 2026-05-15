@@ -35,6 +35,14 @@ The machine learning core uses a **RandomForestRegressor** trained on hourly tim
 
 ---
 
+## 📈 Model Performance & Graphical Visualizations
+
+| Actual vs Predicted Wave Heights | Model Learning Curve |
+|:---:|:---:|
+| ![Actual vs Predicted](assets/prediction_plot.png) | ![Model Learning Curve](assets/learning_curve.png) |
+
+---
+
 ## 🌟 Key Features
 
 *   **🎨 Premium Glassmorphic UI**: Immersive, deep-ocean dark themed interface (`#050b14` to `#0a1628` background) custom-styled with responsive frosted card layouts (`rgba(255,255,255,0.03)`), glowing teal and cyan borders, and clean typography.
