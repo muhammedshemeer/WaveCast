@@ -1,6 +1,8 @@
-# 🌊 Underwater Wave Prediction System & Dashboard (WaveCast)
+# 🌊 WaveCast: Premium CNN-LSTM Ocean Wave Prediction System
 
-This project utilizes a CNN-LSTM deep learning model to predict underwater wave heights using meteorological data (Wind Speed, Pressure, and Temperature) from NOAA buoys, served via a beautiful, self-contained **Streamlit** dashboard.
+WaveCast is a production-grade, highly immersive, ocean-themed Streamlit dashboard powered by a hybrid **CNN-LSTM deep learning model**. It predicts significant wave heights based on meteorological features (Wind Speed, Air Pressure, and Temperature) using sliding window time-series sequences. 
+
+The application is completely self-contained in Python with zero external API dependencies, featuring a high-performance cached neural network engine and a gorgeous deep-ocean dark themed glassmorphic UI.
 
 <div align="center">
 
@@ -10,190 +12,168 @@ This project utilizes a CNN-LSTM deep learning model to predict underwater wave 
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)
 ![R2 Score](https://img.shields.io/badge/R²%20Score-0.96-brightgreen?style=for-the-badge)
 
-**A production-grade, immersive deep learning system that predicts underwater wave heights using a hybrid CNN-LSTM neural network, served via a gorgeous self-contained Streamlit ocean dashboard.**
-
-[Report Bug](#) · [LinkedIn](https://linkedin.com/in/mohammed-shemeer-aiml)
+[View Codebase](https://github.com/muhammedshemeer/Wave_prediction) · [Author's LinkedIn](https://linkedin.com/in/mohammed-shemeer-aiml)
 
 </div>
 
 ---
 
-## 📈 Graphical Representation 
+## 📈 Model Performance & Graphical Visualizations
 
-| Actual vs Predicted | Model Learning Curve |
-|-----------|-----------------|
-| ![Dashboard](prediction_plot.png) | ![Result](learning_curve.png) |
-
----
-
-## 🎯 What This Project Does
-
-Most wave prediction tools require expensive hardware and complex setups. This system provides **real-time wave height predictions** through a simple, beautiful, glassmorphic Streamlit web interface — useful for:
-
-- 🚢 Ship navigation safety
-- 🏄 Coastal activity planning  
-- ⚡ Offshore energy operations
-- 🔬 Oceanographic research
+| Actual vs Predicted Wave Heights | CNN-LSTM Model Learning Curve |
+|:---:|:---:|
+| ![Actual vs Predicted](prediction_plot.png) | ![Model Learning Curve](learning_curve.png) |
 
 ---
 
-## 🧠 Model Architecture
+## 🌟 Key Features
+
+*   **🎨 Premium Glassmorphic UI**: Immersive, deep-ocean dark themed interface (`#050b14` to `#0a1628` background) custom-styled with responsive frosted card layouts (`rgba(255,255,255,0.03)`), glowing teal borders, and custom typography.
+*   **🔮 High-Performance Neural Engine**: Fast, cached loading of the local Keras model (`wave_prediction_model.h5`) and MinMaxScaler pickles using Streamlit's `@st.cache_resource` for low-latency inference.
+*   **🏄 Dynamic Wave Orb Height Gauge**: Beautiful custom SVG wave orb indicator that dynamically fills with animated fluid layers proportional to the predicted ocean swell height (scaled from 0m to 6m).
+*   **🛠️ Interactive Sequence Editor**: Built-in `st.data_editor` sequence table allowing the user to manually edit meteorological parameters or quickly populate pre-configured physical curves (Swell/Storm/Calm) with the click of a button.
+*   **🛡️ Robust Physics Fallback**: A resilient deterministic physics swell formula is integrated to simulate forecasts based on wind shear and pressure drop if the machine-learning stack (TensorFlow) is unavailable, ensuring high application uptime.
+*   **📊 Immersive Plotly Forecasts**: Dynamic multi-line graphs highlighting both historical buoy observations and upcoming wave height projections.
+
+---
+
+## 🧠 CNN-LSTM Neural Network Architecture
+
+To capture both spatial features within meteorological readings and temporal correlations across sequences, the model employs a hybrid deep learning architecture:
 
 ```
 Input (10 time steps × 4 features)
         ↓
-   Conv1D (64 filters, kernel=2, ReLU)
+    Conv1D (64 filters, kernel=2, activation=ReLU)
         ↓
-   MaxPooling1D (pool_size=2)
+    MaxPooling1D (pool_size=2)
         ↓
-   LSTM (50 units, tanh)
+    LSTM (50 units, activation=tanh)
         ↓
-   Dense (1 unit)
+    Dense (1 unit)
         ↓
-Output: Predicted Wave Height (meters)
+Output: Predicted Wave Height (Significant Swell in Meters)
 ```
 
-### Why CNN-LSTM?
-- **Conv1D layers** capture local spatial/sensor patterns across the sliding time window.
-- **LSTM layers** capture long-term temporal dependencies.
-- Together they achieve **R² = 0.96** on test data.
+### Model Performance Metrics:
+- **R² Score**: **0.96** on test datasets.
+- **Data Source**: Custom meteorological sequences compiled from NOAA NDBC Station 46059 (2018–2023).
 
 ---
 
-## 📊 Model Performance
-
-| Metric | Value |
-|--------|-------|
-| R² Score | **0.96** |
-| RMSE | Low |
-| MAE | Low |
-| Training Data | NOAA NDBC Station 46059 (2018–2023) |
-
----
-
-## 🔧 Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Deep Learning | TensorFlow / Keras |
-| Interactive Dashboard | Streamlit |
-| Data Processing | NumPy, Pandas, Scikit-learn |
-| Containerization | Docker |
-| Data Visualizations | Plotly |
-| Data Source | NOAA National Data Buoy Center |
-
----
-
-## 📁 Project Structure
+## 📁 Repository Directory Structure
 
 ```
 Wave_prediction/
-├── streamlit_app/
-│   ├── app.py              # Main Streamlit app containing UI & logic
-│   ├── requirements.txt    # Streamlit requirements
-│   ├── models/             # App model folder
-│   │   ├── wave_prediction_model.h5  # Compiled CNN-LSTM model
-│   │   ├── x_scaler.pkl              # Pickled feature scaler
-│   │   └── y_scaler.pkl              # Pickled target scaler
-│   └── README.md           # App-specific documentation
-├── models/
-│   ├── wave_prediction_model.h5    # Root models (legacy references)
+├── streamlit_app/           # Unified Streamlit Application Code
+│   ├── app.py              # Main dashboard script (UI, styles, and cached inference)
+│   ├── requirements.txt    # Streamlit app direct dependencies
+│   ├── README.md           # Application execution guide
+│   └── models/             # Local ML models and scalers for deployment
+│       ├── wave_prediction_model.h5  # Pre-compiled CNN-LSTM model
+│       ├── x_scaler.pkl              # Pickled features scaler
+│       └── y_scaler.pkl              # Pickled target scaler
+├── data/                    # Dataset storage
+│   ├── raw/                 # Raw downloaded NOAA weather tables
+│   └── processed/           # Processed sequence arrays
+├── models/                  # Root model store (original files)
+│   ├── wave_prediction_model.h5
 │   ├── feature_scaler.pkl
 │   └── target_scaler.pkl
-├── data/
-│   ├── raw/                 # Raw NOAA buoy data
-│   └── processed/           # Preprocessed tensors
-├── download_data.py         # NOAA data downloader
-├── step2_dataset.py         # Dataset preparation
-├── step3_preprocessing.py   # Feature engineering & scaling
-├── wave_prediction.py       # Model training script
-├── Dockerfile               # Container configuration
-├── requirements.txt         # Root requirements
-└── README.md
+├── download_data.py         # Automated buoy data downloader
+├── step2_dataset.py         # Merges raw datasets and handles gaps
+├── step3_preprocessing.py   # Compiles sequential matrices and normalizations
+├── wave_prediction.py       # Trains, validates, and evaluates the CNN-LSTM network
+├── Dockerfile               # Production Docker container definition
+├── requirements.txt         # Root requirements mapping
+└── LICENSE                  # Project licensing details (MIT)
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### Option 1 — Run Locally
+### Method 1: Local Deployment
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/muhammedshemeer/Wave_prediction.git
 cd Wave_prediction
 
-# 2. Activate virtual environment
+# 2. Activate the virtual environment
 venv\Scripts\activate
 
-# 3. Install dependencies
+# 3. Install core dependencies
 pip install -r requirements.txt
 
-# 4. Start the Streamlit Dashboard
+# 4. Launch the dashboard
 streamlit run streamlit_app/app.py
 
-# 5. Open http://localhost:8501 in your browser
+# 5. Open http://localhost:8501 in your browser!
 ```
 
-### Option 2 — Run with Docker
+### Method 2: Running with Docker
 
 ```bash
-# 1. Build the image
-docker build -t wave-prediction-app .
+# 1. Build the production Docker image
+docker build -t wavecast-app .
 
-# 2. Run the container
-docker run -p 8501:8501 wave-prediction-app
+# 2. Spin up the container
+docker run -p 8501:8501 wavecast-app
 
-# 3. Visit http://localhost:8501 in your browser
+# 3. Open http://localhost:8501 in your browser!
 ```
 
 ---
 
-## 📈 Input Features
+## 📊 Weather Input Parameters
 
-| Feature | Unit | Description |
-|---------|------|-------------|
-| Wave Height | meters | Previous recorded significant wave height |
-| Wind Speed | m/s | Wind speed over ocean surface |
-| Air Pressure | hPa | Atmospheric pressure |
-| Temperature | °C | Sea surface temperature |
-
-> The model uses a **sliding window of 10 time steps** to capture temporal patterns before making a prediction.
+| Feature | Metric | Description |
+| :--- | :--- | :--- |
+| **Wave Height (WVHT)** | Meters ($m$) | Signficant swell level from the previous timestamp |
+| **Wind Speed (WSPD)** | Meters/Second ($m/s$) | Atmospheric wind speed above ocean surface |
+| **Air Pressure (BARO)** | Hectopascals ($hPa$) | Barometric pressure at sea-level |
+| **Sea Temp (WTMP)** | Celsius (°C) | Water surface temperature |
 
 ---
 
-## 🔄 How to Retrain
+## 🛠️ Data Buoy Downloader & Model Retraining
+
+You can easily refresh the datasets and retrain the CNN-LSTM sequence model at any time:
 
 ```bash
-# Step 1: Download fresh NOAA data
+# Download the latest NOAA data files
 python download_data.py
 
-# Step 2: Build dataset
+# Clean data and combine parameters
 python step2_dataset.py
 
-# Step 3: Preprocess & create sequences
+# Perform feature engineering, normalizations, and scale pickles creation
 python step3_preprocessing.py
 
-# Step 4: Train model
+# Train the CNN-LSTM neural net and output training plots
 python wave_prediction.py
 ```
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Author Info
 
 **Mohammed Shemeer**  
-B.Tech AI & ML | Dhanalakshmi Srinivasan University  
-🔗 [LinkedIn](https://linkedin.com/in/mohammed-shemeer-aiml) · [GitHub](https://github.com/muhammedshemeer)
+*B.Tech in Artificial Intelligence & Machine Learning*  
+Dhanalakshmi Srinivasan University  
+
+*   **LinkedIn**: [mohammed-shemeer-aiml](https://linkedin.com/in/mohammed-shemeer-aiml)
+*   **GitHub**: [@muhammedshemeer](https://github.com/muhammedshemeer)
 
 ---
 
-## 📄 License
+## 📄 Licensing
 
-This project is open source and available under the [MIT License](LICENSE).
+Licensed under the [MIT License](LICENSE). Feel free to modify, build upon, or distribute as desired.
 
----
+***
 
 <div align="center">
-⭐ Star this repo if you found it useful!
+⭐ If you loved this deep-ocean design, give the repository a star!
 </div>
