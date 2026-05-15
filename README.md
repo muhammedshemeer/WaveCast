@@ -1,37 +1,26 @@
----
-title: WaveCast Wave Height Prediction
-emoji: 🌊
-colorFrom: blue
-colorTo: blue
-sdk: docker
-app_port: 8000
-pinned: true
----
+# 🌊 Underwater Wave Prediction System & Dashboard (WaveCast)
 
-# 🌊 Underwater Wave Prediction System
+This project utilizes a CNN-LSTM deep learning model to predict underwater wave heights using meteorological data (Wind Speed, Pressure, and Temperature) from NOAA buoys, served via a beautiful, self-contained **Streamlit** dashboard.
 
-This project utilizes a CNN-LSTM deep learning model to predict underwater wave heights using meteorological data (Wind Speed, Pressure, and Temperature) from NOAA buoys.
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?style=for-the-badge&logo=tensorflow)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green?style=for-the-badge&logo=fastapi)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.36+-red?style=for-the-badge&logo=streamlit)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)
 ![R2 Score](https://img.shields.io/badge/R²%20Score-0.96-brightgreen?style=for-the-badge)
 
-**A production-grade deep learning system that predicts underwater wave heights using a hybrid CNN-LSTM neural network, served via a REST API with a beautiful interactive dashboard.**
+**A production-grade, immersive deep learning system that predicts underwater wave heights using a hybrid CNN-LSTM neural network, served via a gorgeous self-contained Streamlit ocean dashboard.**
 
-[Live Demo](https://alert-emotion-production-ffa4.up.railway.app) · [API Docs](https://alert-emotion-production-ffa4.up.railway.app/docs) · [Report Bug](https://github.com/muhammedshemeer/Wave_prediction/issues) · [LinkedIn](https://linkedin.com/in/mohammed-shemeer-aiml)
+[Report Bug](#) · [LinkedIn](https://linkedin.com/in/mohammed-shemeer-aiml)
 
 </div>
-
-![Dashboard Screenshot](assets/dashboard_screenshot.png)
 
 ---
 
 ## 📈 Graphical Representation 
 
-| Actualvs Predicted | Model Learning Curve |
+| Actual vs Predicted | Model Learning Curve |
 |-----------|-----------------|
 | ![Dashboard](prediction_plot.png) | ![Result](learning_curve.png) |
 
@@ -39,7 +28,7 @@ This project utilizes a CNN-LSTM deep learning model to predict underwater wave 
 
 ## 🎯 What This Project Does
 
-Most wave prediction tools require expensive hardware and complex setups. This system provides **real-time wave height predictions** through a simple web interface or REST API — useful for:
+Most wave prediction tools require expensive hardware and complex setups. This system provides **real-time wave height predictions** through a simple, beautiful, glassmorphic Streamlit web interface — useful for:
 
 - 🚢 Ship navigation safety
 - 🏄 Coastal activity planning  
@@ -65,9 +54,9 @@ Output: Predicted Wave Height (meters)
 ```
 
 ### Why CNN-LSTM?
-- **CNN layers** capture local patterns across the time window
-- **LSTM layers** capture long-term temporal dependencies
-- Together they achieve **R² = 0.96** on test data
+- **Conv1D layers** capture local spatial/sensor patterns across the sliding time window.
+- **LSTM layers** capture long-term temporal dependencies.
+- Together they achieve **R² = 0.96** on test data.
 
 ---
 
@@ -87,10 +76,10 @@ Output: Predicted Wave Height (meters)
 | Layer | Technology |
 |-------|-----------|
 | Deep Learning | TensorFlow / Keras |
-| API Framework | FastAPI |
+| Interactive Dashboard | Streamlit |
 | Data Processing | NumPy, Pandas, Scikit-learn |
 | Containerization | Docker |
-| Frontend | HTML, CSS, JavaScript |
+| Data Visualizations | Plotly |
 | Data Source | NOAA National Data Buoy Center |
 
 ---
@@ -99,13 +88,18 @@ Output: Predicted Wave Height (meters)
 
 ```
 Wave_prediction/
-├── app/
-│   ├── main.py              # FastAPI endpoints
-│   └── model.py             # Model loading & inference
+├── streamlit_app/
+│   ├── app.py              # Main Streamlit app containing UI & logic
+│   ├── requirements.txt    # Streamlit requirements
+│   ├── models/             # App model folder
+│   │   ├── wave_prediction_model.h5  # Compiled CNN-LSTM model
+│   │   ├── x_scaler.pkl              # Pickled feature scaler
+│   │   └── y_scaler.pkl              # Pickled target scaler
+│   └── README.md           # App-specific documentation
 ├── models/
-│   ├── wave_prediction_model.h5    # Trained CNN-LSTM model
-│   ├── feature_scaler.pkl          # MinMaxScaler for features
-│   └── target_scaler.pkl           # MinMaxScaler for target
+│   ├── wave_prediction_model.h5    # Root models (legacy references)
+│   ├── feature_scaler.pkl
+│   └── target_scaler.pkl
 ├── data/
 │   ├── raw/                 # Raw NOAA buoy data
 │   └── processed/           # Preprocessed tensors
@@ -114,7 +108,7 @@ Wave_prediction/
 ├── step3_preprocessing.py   # Feature engineering & scaling
 ├── wave_prediction.py       # Model training script
 ├── Dockerfile               # Container configuration
-├── requirements.txt         # Dependencies
+├── requirements.txt         # Root requirements
 └── README.md
 ```
 
@@ -129,14 +123,16 @@ Wave_prediction/
 git clone https://github.com/muhammedshemeer/Wave_prediction.git
 cd Wave_prediction
 
-# 2. Install dependencies
+# 2. Activate virtual environment
+venv\Scripts\activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 3. Start the API
-python -m uvicorn app.main:app --reload
+# 4. Start the Streamlit Dashboard
+streamlit run streamlit_app/app.py
 
-# 4. Open dashboard
-# Visit http://127.0.0.1:8000
+# 5. Open http://localhost:8501 in your browser
 ```
 
 ### Option 2 — Run with Docker
@@ -146,51 +142,9 @@ python -m uvicorn app.main:app --reload
 docker build -t wave-prediction-app .
 
 # 2. Run the container
-docker run -p 8000:8000 wave-prediction-app
+docker run -p 8501:8501 wave-prediction-app
 
-# 3. Open dashboard
-# Visit http://127.0.0.1:8000
-```
-
----
-
-## 📡 API Reference
-
-### GET `/`
-Returns welcome message and dashboard UI.
-
-### GET `/health`
-```json
-{ "status": "healthy", "model": "loaded" }
-```
-
-### POST `/predict`
-Accepts 10 consecutive time steps of ocean sensor data.
-
-**Request:**
-```json
-{
-  "data": [
-    [1.58, 6.1, 1014.1, 15.1],
-    [1.58, 6.5, 1014.2, 15.1],
-    [1.58, 6.7, 1014.3, 15.1],
-    [1.58, 6.7, 1014.3, 15.1],
-    [1.58, 6.8, 1014.4, 15.1],
-    [1.56, 6.8, 1014.6, 15.1],
-    [1.55, 6.9, 1014.6, 15.1],
-    [1.53, 6.9, 1014.7, 15.1],
-    [1.52, 7.0, 1014.8, 15.1],
-    [1.51, 7.0, 1014.9, 15.1]
-  ]
-}
-```
-*Each row: [wave_height(m), wind_speed(m/s), pressure(hPa), temperature(°C)]*
-
-**Response:**
-```json
-{
-  "predicted_wave_height_meters": 1.51
-}
+# 3. Visit http://localhost:8501 in your browser
 ```
 
 ---
@@ -222,20 +176,6 @@ python step3_preprocessing.py
 
 # Step 4: Train model
 python wave_prediction.py
-```
-
----
-
-## 🐳 Docker Details
-
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 7860
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
 ```
 
 ---
