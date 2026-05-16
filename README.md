@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/"><img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Streamlit App" /></a>
+  <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/"><img src="https://img.shields.io/badge/Streamlit-App-FF4B4B?style=flat&logo=streamlit&logoColor=white" alt="Streamlit App" /></a>
   <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python" />
   <img src="https://img.shields.io/badge/TensorFlow-2.15-orange.svg" alt="TensorFlow" />
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" />
