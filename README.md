@@ -5,9 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/">
-    <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Launch%20WaveCast-00D4FF?style=for-the-badge&logo=streamlit&logoColor=white" alt="Live Demo" />
-  </a>
+  🚀 <strong>Live Demo URL:</strong> <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/">https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/</a>
 </p>
 
 <p align="center">
@@ -155,9 +153,7 @@ Open your web browser and navigate to **`http://localhost:8501`** to view the li
 Experience the full live dashboard directly in your web browser:
 
 <p align="center">
-  <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/">
-    <img src="https://img.shields.io/badge/🌊%20LAUNCH%20WAVECAST-CLICK%20HERE-00d4ff?style=for-the-badge&logo=launchpad&logoColor=white" alt="Launch Live App" />
-  </a>
+  🔗 <strong>App Link:</strong> <a href="https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/">https://wavecast-erfq2rjs4cmdrjf7qjjzaw.streamlit.app/</a>
 </p>
 
 ---
