@@ -23,8 +23,8 @@
 ## 📸 Dashboard Preview
 
 <p align="center">
-  <img src="[SCREENSHOT_1]" width="48%" alt="Wave Orb Gauge Display" />
-  <img src="[SCREENSHOT_2]" width="48%" alt="Hero Dashboard Interface" />
+  <img src="assets/wave_orb.png" width="48%" alt="Wave Orb Gauge Display" />
+  <img src="assets/dashboard_preview.png" width="48%" alt="Hero Dashboard Interface" />
 </p>
 
 <p align="center">
