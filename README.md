@@ -164,8 +164,8 @@ Experience the full live dashboard directly in your web browser:
 
 ## 👨‍💻 Author
 
-**Mohammed Shemeer**
-*   **LinkedIn**: [Mohammed Shemeer](https://linkedin.com/in/mohammed-shemeer-aiml)
+**Mohammed Shameer M**
+*   **LinkedIn**: [Mohammed Shameer M](https://linkedin.com/in/mohammed-shemeer-aiml)
 *   **GitHub**: [@muhammedshemeer](https://github.com/muhammedshemeer)
 
 ---

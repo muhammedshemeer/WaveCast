@@ -965,7 +965,7 @@ with info_col2:
 # ----------------------------------------------------
 st.markdown("""
 <div style="text-align: center; margin-top: 55px; padding: 25px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; color: rgba(255,255,255,0.5); font-weight: 300; letter-spacing: 0.5px; line-height: 1.5;">
-    <p style="margin: 0 0 4px 0;">© 2026 WaveCast | Built by Mohammed Shemeer</p>
+    <p style="margin: 0 0 4px 0;">© 2026 WaveCast | Built by Mohammed Shameer M</p>
     <p style="margin: 0;">Powered by Streamlit & TensorFlow | Data Source: NOAA NDBC Buoy Station 46059</p>
 </div>
 """, unsafe_allow_html=True)
